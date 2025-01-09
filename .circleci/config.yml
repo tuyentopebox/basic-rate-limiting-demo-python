@@ -1,33 +1,7 @@
 version: 2.1
-jobs:
-  run_tests:
-    docker:
-      - image: circleci/python:3.7.4
-    steps:
-      - checkout
-      - run:
-          name: Create environment
-          command: |
-             python3 -m venv venv
-             source ./venv/bin/activate
-      
-      - run:
-          name: Install Python dependencies
-          command: |
-            echo 'export PATH=~$PATH:~/.local/bin' >> $BASH_ENV && source $BASH_ENV
-            pip3 install --user -r requirements.txt
-      - run:
-          name: Run web server
-          command: |
-            cd server
-            python3 manage.py collectstatic
-            python3 manage.py runserver
-            
-     
+orbs:
+  heroku: circleci/heroku@1.2.6
 workflows:
-  build_test:
+  heroku_deploy:
     jobs:
-      - run_tests
-      
-      
-     
+      - heroku/deploy-via-git
